@@ -1,8 +1,8 @@
 {
-  "desc": "Flow 是一款免费在线 EPUB 阅读器，支持所有平台（Web, Windows, Linux, MacOS, Android, iOS）。同时阅读多本书籍。在不同设备间无缝阅读。",
+  "desc": "SilkFlow 是一款免费在线 EPUB 阅读器，支持所有平台（Web, Windows, Linux, MacOS, Android, iOS）。同时阅读多本书籍。在不同设备间无缝阅读。",
   "page": {
     "home": {
-      "title": "Flow - 在线 EPUB 阅读器"
+      "title": "SilkFlow - 在线 EPUB 阅读器"
     },
     "faq": {
       "title": "常见问题"
@@ -38,15 +38,15 @@
   "feature": {
     "0": {
       "title": "渐进式网页应用",
-      "desc": "Flow 是渐进式网页应用（PWA），这让它拥有跨平台的能力，并且支持安装。"
+      "desc": "SilkFlow 是渐进式网页应用（PWA），这让它拥有跨平台的能力，并且支持安装。"
     },
     "1": {
       "title": "离线优先",
-      "desc": "Flow 可以离线运行（在安装后），而非离线时，Flow 会自动更新。"
+      "desc": "SilkFlow 可以离线运行（在安装后），而非离线时，SilkFlow 会自动更新。"
     },
     "2": {
       "title": "网格布局",
-      "desc": "Flow 支持（水平）网格布局，允许您同时阅读多本书。"
+      "desc": "SilkFlow 支持（水平）网格布局，允许您同时阅读多本书。"
     },
     "3": {
       "title": "自定义云端存储",
@@ -57,16 +57,16 @@
   "frequently_asked_questions": "常见问题",
   "qa2": {
     "0": {
-      "q": "如何安装或卸载 Flow？",
+      "q": "如何安装或卸载 SilkFlow？",
       "a": "Google Chrome: <a target='_blank' href='https://support.google.com/chrome/answer/9658361?hl=zh-Hans'>使用渐进式 Web 应用</a><br/>Microsoft Edge: <a target='_blank' href='https://learn.microsoft.com/zh-cn/microsoft-edge/progressive-web-apps-chromium/ux'>PWA 的用户体验</a><br/>Safari: <a target='_blank' href='https://support.apple.com/zh-cn/104996'>在 Mac 上使用 Safari 浏览器网页 App</a>"
     },
     "1": {
-      "q": "如何将 Flow 设置为默认 ePub 阅读器?",
+      "q": "如何将 SilkFlow 设置为默认 ePub 阅读器?",
       "a": "Google Chrome:  <a target='_blank' href='https://www.bilibili.com/read/cv19698386'>如何将 Flow 设置为默认 ePub 阅读器?</a><br/>"
     },
     "2": {
       "q": "我的数据存储在哪里？",
-      "a": "我们使用 <a target='_blank' href='https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API'>IndexedDB</a> 将你的数据存储在浏览器中。如果您上传一本书，在云端会有一个远程拷贝。"
+      "a": "我们使用 <a target='_blank' href='https://developer.mozilla.org/zh-CN/docs/Web/API/IndexedDB_API'>IndexedDB</a> 将你的数据存储在浏览器中。登录后，你的书籍、进度和批注会同步到你在 SilkFlow 自有后端（Vercel Postgres + Blob）的账户中。"
     },
     "3": {
       "q": "如何清除我的数据？",
@@ -74,7 +74,7 @@
     },
     "4": {
       "q": "支持什么云端存储？",
-      "a": "目前仅支持 Dropbox。"
+      "a": "SilkFlow 自建云端——你的书库会同步到 SilkFlow 自有的 Vercel Postgres + Blob 存储中，归属你的账户。通过 SilkPortal SSO 登录即可开启跨设备同步。"
     }
   }
 }

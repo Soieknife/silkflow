@@ -1,6 +1,6 @@
 import useTranslation from 'next-translate/useTranslation'
 
-import { range } from '@flow/internal'
+import { range } from '@silkflow/internal'
 
 import { OpenApp, QA, Seo } from '../components'
 

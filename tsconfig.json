@@ -16,9 +16,9 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@flow/reader/*": ["apps/reader/src/*"],
-      "@flow/internal": ["packages/internal/src/index.ts"],
-      "@flow/epubjs/*": ["packages/epubjs/*"]
+      "@silkflow/reader/*": ["apps/reader/src/*"],
+      "@silkflow/internal": ["packages/internal/src/index.ts"],
+      "@silkflow/epubjs/*": ["packages/epubjs/*"]
     }
   },
   "exclude": ["node_modules"]

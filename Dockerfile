@@ -9,7 +9,7 @@ WORKDIR /app
 RUN yarn global add turbo
 COPY . .
 # Only Take packages that are needed to compile this app
-RUN turbo prune --scope=@flow/reader --docker
+RUN turbo prune --scope=@silkflow/reader --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM node:18-alpine AS installer

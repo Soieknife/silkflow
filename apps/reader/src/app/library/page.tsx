@@ -1,9 +1,10 @@
+'use client'
+
 import { useBoolean } from '@literal-ui/hooks'
 import clsx from 'clsx'
 import { useLiveQuery } from 'dexie-react-hooks'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
 import {
   MdCheckBox,
   MdCheckBoxOutlineBlank,
@@ -14,52 +15,63 @@ import {
 import { useSet } from 'react-use'
 import { usePrevious } from 'react-use'
 
-import { ReaderGridView, Button, TextField, DropZone } from '../components'
-import { BookRecord, CoverRecord, db } from '../db'
-import { addFile, fetchBook, handleFiles } from '../file'
+import {
+  createBookAction,
+  deleteBookAction,
+} from '@silkflow/reader/app/actions/books'
+import {
+  Button,
+  DropZone,
+  ReaderGridView,
+  TextField,
+} from '@silkflow/reader/components'
+import { Layout } from '@silkflow/reader/components'
+import { BookRecord, CoverRecord, db } from '@silkflow/reader/db'
+import { addFile, fetchBook, handleFiles } from '@silkflow/reader/file'
 import {
   useDisablePinchZooming,
   useLibrary,
-  useMobile,
   useRemoteBooks,
-  useRemoteFiles,
   useTranslation,
-} from '../hooks'
-import { reader, useReaderSnapshot } from '../models'
-import { lock } from '../styles'
-import { dbx, pack, uploadData } from '../sync'
-import { copy } from '../utils'
+} from '@silkflow/reader/hooks'
+import { uploadEpub } from '@silkflow/reader/lib/client-upload'
+import { reader, useReaderSnapshot } from '@silkflow/reader/models'
+import { lock } from '@silkflow/reader/styles'
+import { pack } from '@silkflow/reader/sync'
+import { copy } from '@silkflow/reader/utils'
 
 const placeholder = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect fill="gray" fill-opacity="0" width="1" height="1"/></svg>`
 
 const SOURCE = 'src'
 
-export default function Index() {
-  const { focusedTab } = useReaderSnapshot()
-  const router = useRouter()
-  const src = new URL(window.location.href).searchParams.get(SOURCE)
-  const [loading, setLoading] = useState(!!src)
+export default function LibraryPage() {
+  return (
+    <Layout>
+      <Index />
+    </Layout>
+  )
+}
+
+function Index() {
+  const { data: session } = useSession()
+  const userId = session?.user?.id
+  const [loading, setLoading] = useState(false)
 
   useDisablePinchZooming()
 
+  // Open an epub passed via ?src=<url> (share/download flow + PWA file handler).
   useEffect(() => {
-    let src = router.query[SOURCE]
-    if (!src) return
-    if (!Array.isArray(src)) src = [src]
-
+    const src = new URL(window.location.href).searchParams.getAll(SOURCE)
+    if (!src.length) return
     Promise.all(
-      src.map((s) =>
-        fetchBook(s).then((b) => {
-          reader.addTab(b)
-        }),
-      ),
+      src.map((s) => fetchBook(s).then((b) => reader.addTab(b))),
     ).finally(() => setLoading(false))
-  }, [router.query])
+  }, [])
 
+  // PWA file handler (launchQueue).
   useEffect(() => {
     if ('launchQueue' in window && 'LaunchParams' in window) {
       window.launchQueue.setConsumer((params) => {
-        console.log('launchQueue', params)
         if (params.files.length) {
           Promise.all(params.files.map((f) => f.getFile()))
             .then((files) => handleFiles(files))
@@ -69,96 +81,67 @@ export default function Index() {
     }
   }, [])
 
-  useEffect(() => {
-    router.beforePopState(({ url }) => {
-      if (url === '/') {
-        reader.clear()
-      }
-      return true
-    })
-  }, [router])
-
   return (
     <>
-      <Head>
-        {/* https://github.com/microsoft/vscode/blob/36fdf6b697cba431beb6e391b5a8c5f3606975a1/src/vs/code/browser/workbench/workbench.html#L16 */}
-        {/* Disable pinch zooming */}
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
-        />
-        <title>{focusedTab?.title ?? 'Flow'}</title>
-      </Head>
       <ReaderGridView />
-      {loading || <Library />}
+      {loading || <Library userId={userId} />}
     </>
   )
 }
 
-const Library: React.FC = () => {
+interface LibraryProps {
+  userId?: string
+}
+const Library: React.FC<LibraryProps> = ({ userId }) => {
   const books = useLibrary()
   const covers = useLiveQuery(() => db?.covers.toArray() ?? [])
   const t = useTranslation('home')
 
   const { data: remoteBooks, mutate: mutateRemoteBooks } = useRemoteBooks()
-  const { data: remoteFiles, mutate: mutateRemoteFiles } = useRemoteFiles()
   const previousRemoteBooks = usePrevious(remoteBooks)
-  const previousRemoteFiles = usePrevious(remoteFiles)
 
   const [select, toggleSelect] = useBoolean(false)
   const [selectedBookIds, { add, has, toggle, reset }] = useSet<string>()
 
   const [loading, setLoading] = useState<string | undefined>()
-  const [readyToSync, setReadyToSync] = useState(false)
 
   const { groups } = useReaderSnapshot()
 
+  // First cloud pull: upsert server rows into the local-first Dexie store.
   useEffect(() => {
-    if (previousRemoteFiles && remoteFiles) {
-      // to remove effect dependency `books`
-      db?.books.toArray().then((books) => {
-        if (books.length === 0) return
-
-        const newRemoteBooks = remoteFiles.map((f) =>
-          books.find((b) => b.name === f.name),
-        ) as BookRecord[]
-
-        uploadData(newRemoteBooks)
-        mutateRemoteBooks(newRemoteBooks, { revalidate: false })
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mutateRemoteBooks, remoteFiles])
-
-  useEffect(() => {
-    if (!previousRemoteBooks && remoteBooks) {
-      db?.books.bulkPut(remoteBooks).then(() => setReadyToSync(true))
-    }
+    if (!remoteBooks || previousRemoteBooks) return
+    ;(async () => {
+      for (const rb of remoteBooks) {
+        const existing = await db?.books.get(rb.id)
+        if (!existing) {
+          await db?.books.put({
+            id: rb.id,
+            name: rb.name,
+            size: rb.size ?? 0,
+            metadata: rb.metadata as BookRecord['metadata'],
+            createdAt: rb.createdAt
+              ? new Date(rb.createdAt).getTime()
+              : Date.now(),
+            updatedAt: rb.updatedAt
+              ? new Date(rb.updatedAt).getTime()
+              : undefined,
+            cfi: rb.cfi ?? undefined,
+            percentage: rb.percentage ?? undefined,
+            definitions: (rb.definitions as string[]) ?? [],
+            annotations: (rb.annotations as BookRecord['annotations']) ?? [],
+            configuration: rb.configuration as BookRecord['configuration'],
+            epubBlobUrl: rb.epubBlobUrl ?? undefined,
+            coverBlobUrl: rb.coverBlobUrl ?? undefined,
+          })
+        }
+        if (rb.coverBlobUrl) {
+          const c = await db?.covers.get(rb.id)
+          if (!c) await db?.covers.put({ id: rb.id, cover: rb.coverBlobUrl })
+        }
+      }
+    })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remoteBooks])
-
-  useEffect(() => {
-    if (!remoteFiles || !readyToSync) return
-
-    db?.books.toArray().then(async (books) => {
-      for (const remoteFile of remoteFiles) {
-        const book = books.find((b) => b.name === remoteFile.name)
-        if (!book) continue
-
-        const file = await db?.files.get(book.id)
-        if (file) continue
-
-        setLoading(book.id)
-        await dbx
-          .filesDownload({ path: `/files/${remoteFile.name}` })
-          .then((d) => {
-            const blob: Blob = (d.result as any).fileBlob
-            return addFile(book.id, new File([blob], book.name))
-          })
-        setLoading(undefined)
-      }
-    })
-  }, [readyToSync, remoteFiles])
 
   useEffect(() => {
     if (!select) reset()
@@ -172,6 +155,46 @@ const Library: React.FC = () => {
   )
   const allSelected = selectedBookIds.size === books.length
 
+  async function ensureFile(book: BookRecord) {
+    const f = await db?.files.get(book.id)
+    if (f || !book.epubBlobUrl) return
+    const res = await fetch(book.epubBlobUrl)
+    const blob = await res.blob()
+    await addFile(book.id, new File([blob], book.name))
+  }
+
+  async function uploadBookToCloud(book: BookRecord) {
+    if (!userId || book.epubBlobUrl) return
+    const fr = await db?.files.get(book.id)
+    if (!fr) return
+
+    setLoading(book.id)
+    try {
+      const epubUrl = await uploadEpub(userId, fr.file)
+      const cover = await db?.covers.get(book.id)
+      await createBookAction({
+        id: book.id,
+        name: book.name,
+        size: book.size,
+        metadata: book.metadata,
+        epubBlobUrl: epubUrl,
+        coverDataUrl: cover?.cover ?? null,
+      })
+      await db?.books.update(book.id, { epubBlobUrl: epubUrl })
+      mutateRemoteBooks()
+    } finally {
+      setLoading(undefined)
+    }
+  }
+
+  async function importFiles(files: Iterable<File>) {
+    const newBooks = await handleFiles(files)
+    for (const book of newBooks) {
+      await uploadBookToCloud(book)
+    }
+    return newBooks
+  }
+
   return (
     <DropZone
       className="scroll-parent h-full p-4"
@@ -180,7 +203,7 @@ const Library: React.FC = () => {
         const book = books.find((b) => b.id === bookId)
         if (book) reader.addTab(book)
 
-        handleFiles(e.dataTransfer.files)
+        importFiles(e.dataTransfer.files)
       }}
     >
       <div className="mb-4 space-y-2.5">
@@ -196,7 +219,9 @@ const Library: React.FC = () => {
                 Icon: MdOutlineShare,
                 onClick(el) {
                   if (el?.reportValidity()) {
-                    copy(`${window.location.origin}/?${SOURCE}=${el.value}`)
+                    copy(
+                      `${window.location.origin}/library?${SOURCE}=${el.value}`,
+                    )
                   }
                 },
               },
@@ -250,24 +275,8 @@ const Library: React.FC = () => {
                 <Button
                   onClick={async () => {
                     toggleSelect()
-
                     for (const book of selectedBooks) {
-                      const remoteFile = remoteFiles?.find(
-                        (f) => f.name === book.name,
-                      )
-                      if (remoteFile) continue
-
-                      const file = await db?.files.get(book.id)
-                      if (!file) continue
-
-                      setLoading(book.id)
-                      await dbx.filesUpload({
-                        path: `/files/${book.name}`,
-                        contents: file.file,
-                      })
-                      setLoading(undefined)
-
-                      mutateRemoteFiles()
+                      await uploadBookToCloud(book)
                     }
                   }}
                 >
@@ -282,20 +291,10 @@ const Library: React.FC = () => {
                     db?.covers.bulkDelete(bookIds)
                     db?.files.bulkDelete(bookIds)
 
-                    // folder data is not updated after `filesDeleteBatch`
-                    mutateRemoteFiles(
-                      async (data) => {
-                        await dbx.filesDeleteBatch({
-                          entries: selectedBooks.map((b) => ({
-                            path: `/files/${b.name}`,
-                          })),
-                        })
-                        return data?.filter(
-                          (f) => !selectedBooks.find((b) => b.name === f.name),
-                        )
-                      },
-                      { revalidate: false },
+                    await Promise.all(
+                      selectedBooks.map((b) => deleteBookAction(b.id)),
                     )
+                    mutateRemoteBooks()
                   }}
                 >
                   {t('delete')}
@@ -317,7 +316,7 @@ const Library: React.FC = () => {
                     className="absolute inset-0 cursor-pointer opacity-0"
                     onChange={(e) => {
                       const files = e.target.files
-                      if (files) handleFiles(files)
+                      if (files) importFiles(files)
                     }}
                     multiple
                   />
@@ -347,6 +346,10 @@ const Library: React.FC = () => {
               selected={has(book.id)}
               loading={loading === book.id}
               toggle={toggle}
+              onOpen={async (b) => {
+                await ensureFile(b)
+                reader.addTab(b)
+              }}
             />
           ))}
         </ul>
@@ -362,6 +365,7 @@ interface BookProps {
   selected?: boolean
   loading?: boolean
   toggle: (id: string) => void
+  onOpen: (book: BookRecord) => void
 }
 const Book: React.FC<BookProps> = ({
   book,
@@ -370,14 +374,10 @@ const Book: React.FC<BookProps> = ({
   selected,
   loading,
   toggle,
+  onOpen,
 }) => {
-  const remoteFiles = useRemoteFiles()
-
-  const router = useRouter()
-  const mobile = useMobile()
-
   const cover = covers?.find((c) => c.id === book.id)?.cover
-  const remoteFile = remoteFiles.data?.find((f) => f.name === book.name)
+  const synced = !!book.epubBlobUrl
 
   const Icon = selected ? MdCheckBox : MdCheckBoxOutlineBlank
 
@@ -386,18 +386,17 @@ const Book: React.FC<BookProps> = ({
       <div
         role="button"
         className="border-inverse-on-surface relative border"
-        onClick={async () => {
+        onClick={() => {
           if (select) {
             toggle(book.id)
           } else {
-            if (mobile) await router.push('/_')
-            reader.addTab(book)
+            onOpen(book)
           }
         }}
       >
         <div
           className={clsx(
-            'absolute bottom-0 h-1 bg-blue-500',
+            'bg-on-surface/70 absolute bottom-0 h-1',
             loading && 'progress-bit w-[5%]',
           )}
         />
@@ -432,7 +431,7 @@ const Book: React.FC<BookProps> = ({
         <MdCheckCircle
           className={clsx(
             'mr-1 mb-0.5 inline',
-            remoteFile ? 'text-tertiary' : 'text-surface-variant',
+            synced ? 'text-tertiary' : 'text-surface-variant',
           )}
           size={16}
         />

@@ -12,8 +12,8 @@ import {
   useState,
 } from 'react'
 
-import { useMobile } from '@flow/reader/hooks'
-import { clamp } from '@flow/reader/utils'
+import { useMobile } from '@silkflow/reader/hooks'
+import { clamp } from '@silkflow/reader/utils'
 
 interface ISplitViewItem {
   key: string

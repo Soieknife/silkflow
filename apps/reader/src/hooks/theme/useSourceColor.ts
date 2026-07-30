@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useSettings } from '@flow/reader/state'
+import { useSettings } from '@silkflow/reader/state'
 
 export function useSourceColor() {
   const [{ theme }, setSettings] = useSettings()
@@ -18,5 +18,5 @@ export function useSourceColor() {
     [setSettings],
   )
 
-  return { sourceColor: theme?.source ?? '#0ea5e9', setSourceColor }
+  return { sourceColor: theme?.source ?? '#2b2b2b', setSourceColor }
 }

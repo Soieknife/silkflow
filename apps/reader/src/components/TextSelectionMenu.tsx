@@ -35,7 +35,9 @@ interface TextSelectionMenuProps {
 export const TextSelectionMenu: React.FC<TextSelectionMenuProps> = ({
   tab,
 }) => {
-  const { rendition, annotationRange } = useSnapshot(tab)
+  const { rendition, annotationRange } = useSnapshot(
+    tab,
+  ) as unknown as typeof tab
   const [settings] = useSettings()
 
   // `manager` is not reactive, so we need to use getter

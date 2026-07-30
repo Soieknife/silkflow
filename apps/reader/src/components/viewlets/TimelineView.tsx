@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
-import { useList, useTranslation } from '@flow/reader/hooks'
-import { reader, useReaderSnapshot } from '@flow/reader/models'
+import { useList, useTranslation } from '@silkflow/reader/hooks'
+import { reader, useReaderSnapshot } from '@silkflow/reader/models'
 
 import { Row } from '../Row'
 import { PaneViewProps, PaneView, Pane } from '../base'

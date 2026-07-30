@@ -7,7 +7,7 @@ import {
   useList,
   useMobile,
   useTranslation,
-} from '@flow/reader/hooks'
+} from '@silkflow/reader/hooks'
 import {
   compareHref,
   dfs,
@@ -15,7 +15,7 @@ import {
   INavItem,
   reader,
   useReaderSnapshot,
-} from '@flow/reader/models'
+} from '@silkflow/reader/models'
 
 import { Row } from '../Row'
 import { PaneViewProps, PaneView, Pane } from '../base'

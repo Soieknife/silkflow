@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "Flow",
-  "short_name": "Flow",
+  "name": "SilkFlow",
+  "short_name": "SilkFlow",
   "description": "Redefine EPUB reader",
   "icons": [
     {

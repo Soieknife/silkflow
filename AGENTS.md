@@ -12,10 +12,10 @@
 
 - `pnpm install` — bootstrap dependencies; rerun after updating workspace packages.
 - `pnpm dev` — launch all app `dev` scripts in parallel with hot reload.
-- `pnpm --filter @flow/reader dev` — focus on a single app during debugging.
+- `pnpm --filter @silkflow/reader dev` — focus on a single app during debugging.
 - `pnpm build` — run every workspace build; mirror what CI executes before releases.
 - `pnpm lint` — aggregate ESLint + Next checks; respects Prettier formatting.
-- `pnpm --filter @flow/epubjs test` — execute the Karma/Mocha suite (Chrome headless required).
+- `pnpm --filter @silkflow/epubjs test` — execute the Karma/Mocha suite (Chrome headless required).
 
 ## Coding Style & Naming Conventions
 

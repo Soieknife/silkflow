@@ -5,6 +5,13 @@ module.exports = {
   env: {
     node: true,
   },
+  ignorePatterns: [
+    'node_modules/',
+    '**/.next/',
+    '**/next-env.d.ts',
+    '**/dist/',
+    '**/build/',
+  ],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -48,7 +55,7 @@ module.exports = {
           'sibling',
           'index',
         ],
-        pathGroups: [{ pattern: '@flow/**', group: 'internal' }],
+        pathGroups: [{ pattern: '@silkflow/**', group: 'internal' }],
         pathGroupsExcludedImportTypes: ['builtin'],
       },
     ],

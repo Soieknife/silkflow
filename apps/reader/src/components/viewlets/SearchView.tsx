@@ -2,13 +2,13 @@ import { useState, useEffect, useMemo } from 'react'
 import Highlighter from 'react-highlight-words'
 import { VscCollapseAll, VscExpandAll } from 'react-icons/vsc'
 
-import { useAction, useList, useTranslation } from '@flow/reader/hooks'
+import { useAction, useList, useTranslation } from '@silkflow/reader/hooks'
 import {
   flatTree,
   IMatch,
   useReaderSnapshot,
   reader,
-} from '@flow/reader/models'
+} from '@silkflow/reader/models'
 
 import { TextField } from '../Form'
 import { Row } from '../Row'

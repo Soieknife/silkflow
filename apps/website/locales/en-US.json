@@ -1,8 +1,8 @@
 {
-  "desc": "Flow is a free online EPUB reader, support all platforms (Web, Windows, Linux, MacOS, Android, iOS). Read multiple books at the same time. Read seamlessly between different devices.",
+  "desc": "SilkFlow is a free online EPUB reader, support all platforms (Web, Windows, Linux, MacOS, Android, iOS). Read multiple books at the same time. Read seamlessly between different devices.",
   "page": {
     "home": {
-      "title": "Flow - Online EPUB reader"
+      "title": "SilkFlow - Online EPUB reader"
     },
     "faq": {
       "title": "Frequently asked questions"
@@ -38,15 +38,15 @@
   "feature": {
     "0": {
       "title": "Progressive web app",
-      "desc": "Flow is progressive web app (PWA), which means it is cross-platform and installable."
+      "desc": "SilkFlow is progressive web app (PWA), which means it is cross-platform and installable."
     },
     "1": {
       "title": "Offline first",
-      "desc": "Flow can be run offline (after installation), and when not offline, Flow will update automatically."
+      "desc": "SilkFlow can be run offline (after installation), and when not offline, SilkFlow will update automatically."
     },
     "2": {
       "title": "Grid layout",
-      "desc": "Flow supports (horizontal) grid layout, which allows you to read multiple books at the same time."
+      "desc": "SilkFlow supports (horizontal) grid layout, which allows you to read multiple books at the same time."
     },
     "3": {
       "title": "Custom cloud storage",
@@ -57,16 +57,16 @@
   "frequently_asked_questions": "Frequently asked questions",
   "qa2": {
     "0": {
-      "q": "How to install or uninstall Flow?",
+      "q": "How to install or uninstall SilkFlow?",
       "a": "Google Chrome: <a target='_blank' href='https://support.google.com/chrome/answer/9658361?hl=en'>Use Progressive Web Apps</a><br/>Microsoft Edge: <a target='_blank' href='https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps-chromium/ux'>The user experience of PWAs</a><br/>Safari: <a target='_blank' href='https://support.apple.com/en-us/104996'>Use Safari web apps on Mac</a>"
     },
     "1": {
-      "q": "How to set Flow as the default ePub reader?",
+      "q": "How to set SilkFlow as the default ePub reader?",
       "a": "Google Chrome: <a target='_blank' href='https://pacexy.notion.site/How-to-set-Flow-as-the-default-ePub-reader-35e44bd24aef4d63a3c55f054929f064'>How to set Flow as the default ePub reader?</a><br/>"
     },
     "2": {
       "q": "Where are my data stored?",
-      "a": "Your data is stored locally in your browser, using <a target='_blank' href='https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API'>IndexedDB</a>. If you upload a book, there will be a remote copy in the cloud."
+      "a": "Your data is stored locally in your browser, using <a target='_blank' href='https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API'>IndexedDB</a>. When you sign in, your books, progress and annotations sync to your own account on SilkFlow's backend (Vercel Postgres + Blob)."
     },
     "3": {
       "q": "How to clear my data?",
@@ -74,7 +74,7 @@
     },
     "4": {
       "q": "What cloud storage do you support?",
-      "a": "Only Dropbox for now."
+      "a": "SilkFlow hosts its own cloud — your library is synced to SilkFlow's Vercel Postgres + Blob storage under your account. Sign in via the SilkPortal SSO to enable cross-device sync."
     }
   }
 }

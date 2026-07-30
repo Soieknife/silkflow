@@ -1,12 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { debounce } from '@github/mini-throttle/decorators'
 import { IS_SERVER } from '@literal-ui/hooks'
 import React from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { proxy, ref, snapshot, subscribe, useSnapshot } from 'valtio'
 
-import type { Rendition, Location, Book } from '@flow/epubjs'
-import Navigation, { NavItem } from '@flow/epubjs/types/navigation'
-import Section from '@flow/epubjs/types/section'
+import type { Rendition, Location, Book } from '@silkflow/epubjs'
+import Navigation, { NavItem } from '@silkflow/epubjs/types/navigation'
+import Section from '@silkflow/epubjs/types/section'
 
 import { AnnotationColor, AnnotationType } from '../annotation'
 import { BookRecord, db } from '../db'
@@ -586,8 +587,8 @@ subscribe(reader, () => {
   console.log(snapshot(reader))
 })
 
-export function useReaderSnapshot() {
-  return useSnapshot(reader)
+export function useReaderSnapshot(): typeof reader {
+  return useSnapshot(reader) as unknown as typeof reader
 }
 
 declare global {

@@ -1,12 +1,11 @@
 import {
   themeFromSourceColor,
   argbFromHex,
-  Theme,
+  type Theme,
 } from '@material/material-color-utilities'
-import Head from 'next/head'
 import { useEffect, useMemo } from 'react'
 
-import { range } from '@flow/internal'
+import { range } from '@silkflow/internal'
 
 import { rgbFromArgb } from '../color'
 import { useSetTheme, useSourceColor } from '../hooks'
@@ -78,11 +77,9 @@ export function Theme() {
   }, [setTheme, theme])
 
   return (
-    <Head>
-      <style
-        id="theme"
-        dangerouslySetInnerHTML={{ __html: generateCss(theme) }}
-      ></style>
-    </Head>
+    <style
+      id="theme"
+      dangerouslySetInnerHTML={{ __html: generateCss(theme) }}
+    />
   )
 }

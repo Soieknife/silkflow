@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react'
 
-import { compositeColors } from '@flow/reader/color'
-import { useSettings } from '@flow/reader/state'
+import { compositeColors } from '@silkflow/reader/color'
+import { useSettings } from '@silkflow/reader/state'
 
 import { useColorScheme } from './useColorScheme'
 import { useTheme } from './useTheme'
@@ -50,7 +50,7 @@ export function useBackground() {
     const { surface, primary } = rawTheme.schemes.light
 
     const color = dark
-      ? '#24292e'
+      ? '#1a1a1a'
       : level < 0
       ? '#fff'
       : compositeColors(surface, primary, surfaceMap[level]!)

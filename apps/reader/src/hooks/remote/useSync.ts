@@ -1,42 +1,32 @@
+'use client'
+
 import { useCallback, useEffect } from 'react'
 import { useSnapshot } from 'valtio'
 
-import { Annotation } from '@flow/reader/annotation'
-import { BookRecord } from '@flow/reader/db'
-import { BookTab } from '@flow/reader/models'
-import { uploadData } from '@flow/reader/sync'
+import { Annotation } from '@silkflow/reader/annotation'
+import { BookRecord } from '@silkflow/reader/db'
+import { BookTab } from '@silkflow/reader/models'
 
-import { useRemoteBooks } from './useRemote'
+import { updateBookAction } from '../../app/actions/books'
 
+/**
+ * Push per-tab reading state (cfi/percentage, definitions, annotations,
+ * typography) to the user's Postgres row. Last-write-wins by `updated_at`.
+ */
 export function useSync(tab: BookTab) {
-  const { mutate } = useRemoteBooks()
   const { location, book } = useSnapshot(tab)
 
   const id = tab.book.id
 
   const sync = useCallback(
     async (changes: Partial<BookRecord>) => {
-      // to remove effect dependency `remoteBooks`
-      mutate(
-        (remoteBooks) => {
-          if (remoteBooks) {
-            const i = remoteBooks.findIndex((b) => b.id === id)
-            if (i < 0) return remoteBooks
-
-            remoteBooks[i] = {
-              ...remoteBooks[i]!,
-              ...changes,
-            }
-
-            uploadData(remoteBooks)
-
-            return [...remoteBooks]
-          }
-        },
-        { revalidate: false },
-      )
+      try {
+        await updateBookAction(id, changes as any)
+      } catch {
+        /* offline / unauthorized — local-first store remains authoritative */
+      }
     },
-    [id, mutate],
+    [id],
   )
 
   useEffect(() => {

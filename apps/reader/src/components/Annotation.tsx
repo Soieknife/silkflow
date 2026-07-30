@@ -16,7 +16,9 @@ interface FindMatchProps {
 }
 const FindMatches: React.FC<FindMatchProps> = ({ tab }) => {
   const setAction = useSetAction()
-  const { rendition, results, currentHref } = useSnapshot(tab)
+  const { rendition, results, currentHref } = useSnapshot(
+    tab,
+  ) as unknown as typeof tab
 
   useEffect(() => {
     const result = results?.find((r) => compareHref(currentHref, r.id))
@@ -61,7 +63,7 @@ interface DefinitionProps {
 }
 const Definition: React.FC<DefinitionProps> = ({ tab, definition }) => {
   const setAction = useSetAction()
-  const { rendition, currentHref } = useSnapshot(tab)
+  const { rendition, currentHref } = useSnapshot(tab) as unknown as typeof tab
 
   useEffect(() => {
     const result = tab.searchInSection(definition)
@@ -108,7 +110,7 @@ interface AnnotationProps {
   annotation: IAnnotation
 }
 const Annotation: React.FC<AnnotationProps> = ({ tab, annotation }) => {
-  const { rendition } = useSnapshot(tab)
+  const { rendition } = useSnapshot(tab) as unknown as typeof tab
 
   useEffect(() => {
     const h = rendition?.annotations[annotation.type](
@@ -148,7 +150,7 @@ interface AnnotationsProps {
   tab: BookTab
 }
 export const Annotations: React.FC<AnnotationsProps> = ({ tab }) => {
-  const { book, section } = useSnapshot(tab)
+  const { book, section } = useSnapshot(tab) as unknown as typeof tab
 
   return (
     <>

@@ -2,15 +2,15 @@ import clsx from 'clsx'
 import { useCallback, useRef, useState } from 'react'
 import { MdAdd, MdRemove } from 'react-icons/md'
 
-import { RenditionSpread } from '@flow/epubjs/types/rendition'
-import { useTranslation } from '@flow/reader/hooks'
-import { reader, useReaderSnapshot } from '@flow/reader/models'
+import { RenditionSpread } from '@silkflow/epubjs/types/rendition'
+import { useTranslation } from '@silkflow/reader/hooks'
+import { reader, useReaderSnapshot } from '@silkflow/reader/models'
 import {
   defaultSettings,
   TypographyConfiguration,
   useSettings,
-} from '@flow/reader/state'
-import { keys } from '@flow/reader/utils'
+} from '@silkflow/reader/state'
+import { keys } from '@silkflow/reader/utils'
 
 import { Select, TextField, TextFieldProps } from '../Form'
 import { PaneViewProps, PaneView, Pane } from '../base'

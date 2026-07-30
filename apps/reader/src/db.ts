@@ -1,7 +1,7 @@
 import { IS_SERVER } from '@literal-ui/hooks'
 import Dexie, { Table } from 'dexie'
 
-import { PackagingMetadataObject } from '@flow/epubjs/types/packaging'
+import { PackagingMetadataObject } from '@silkflow/epubjs/types/packaging'
 
 import { Annotation } from './annotation'
 import { fileToEpub } from './file'
@@ -32,6 +32,10 @@ export interface BookRecord {
   configuration?: {
     typography?: TypographyConfiguration
   }
+  // Cloud (Vercel Blob) references — present when the book is synced.
+  // Non-indexed fields, so no Dexie schema bump is required.
+  epubBlobUrl?: string
+  coverBlobUrl?: string
 }
 
 export class DB extends Dexie {

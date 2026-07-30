@@ -16,7 +16,7 @@ import { useRecoilState } from 'recoil'
 
 import {
   Env,
-  Action,
+  type Action,
   useAction,
   useBackground,
   useColorScheme,
@@ -52,7 +52,7 @@ export const Layout: React.FC = ({ children }) => {
   }, [mobile, setAction])
 
   return (
-    <div id="layout" className="select-none">
+    <div id="layout" className="ink-paper select-none">
       <SplitView>
         {mobile === false && <ActivityBar />}
         {mobile === true && <NavigationBar />}

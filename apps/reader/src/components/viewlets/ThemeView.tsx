@@ -1,13 +1,13 @@
 import clsx from 'clsx'
 import { ComponentProps } from 'react'
 
-import { range } from '@flow/internal'
+import { range } from '@silkflow/internal'
 import {
   useBackground,
   useColorScheme,
   useSourceColor,
   useTranslation,
-} from '@flow/reader/hooks'
+} from '@silkflow/reader/hooks'
 
 import { ColorPicker, Label } from '../Form'
 import { PaneViewProps, PaneView, Pane } from '../base'

@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react'
 
-import { Contents } from '@flow/epubjs'
+import { Contents } from '@silkflow/epubjs'
 
 import { Settings } from './state'
 import { keys } from './utils'
@@ -14,11 +14,11 @@ export const defaultStyle = {
     background: 'transparent',
   },
   'a:any-link': {
-    color: '#3b82f6 !important',
-    'text-decoration': 'none !important',
+    color: '#1c1c1c !important',
+    'text-decoration': 'underline !important',
   },
   '::selection': {
-    'background-color': 'rgba(3, 102, 214, 0.2)',
+    'background-color': 'rgba(28, 28, 28, 0.18)',
   },
 }
 

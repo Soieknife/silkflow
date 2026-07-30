@@ -1,17 +1,11 @@
+'use client'
+
 import { useEventListener } from '@literal-ui/hooks'
 import Dexie from 'dexie'
-import { useRouter } from 'next/router'
-import { parseCookies, destroyCookie } from 'nookies'
+import { useSession, signOut } from 'next-auth/react'
 
-import {
-  ColorScheme,
-  useColorScheme,
-  useForceRender,
-  useTranslation,
-} from '@flow/reader/hooks'
-import { localeNames } from '@flow/reader/locales'
-import { useSettings } from '@flow/reader/state'
-import { dbx, mapToToken, OAUTH_SUCCESS_MESSAGE } from '@flow/reader/sync'
+import { useColorScheme, useTranslation } from '@silkflow/reader/hooks'
+import { useSettings } from '@silkflow/reader/state'
 
 import { Button } from '../Button'
 import { Checkbox, Select } from '../Form'
@@ -19,32 +13,17 @@ import { Page } from '../Page'
 
 export const Settings: React.FC = () => {
   const { scheme, setScheme } = useColorScheme()
-  const { asPath, push, locale, locales } = useRouter()
   const [settings, setSettings] = useSettings()
   const t = useTranslation('settings')
 
   return (
     <Page headline={t('title')}>
       <div className="space-y-6">
-        <Item title={t('language')}>
-          <Select
-            value={locale}
-            onChange={(e) => {
-              push(asPath, undefined, { locale: e.target.value })
-            }}
-          >
-            {locales?.map((loc) => (
-              <option key={loc} value={loc}>
-                {localeNames[loc] || loc}
-              </option>
-            ))}
-          </Select>
-        </Item>
         <Item title={t('color_scheme')}>
           <Select
             value={scheme}
             onChange={(e) => {
-              setScheme(e.target.value as ColorScheme)
+              setScheme(e.target.value as 'system' | 'light' | 'dark')
             }}
           >
             <option value="system">{t('color_scheme.system')}</option>
@@ -64,7 +43,7 @@ export const Settings: React.FC = () => {
             }}
           />
         </Item>
-        <Synchronization />
+        <Account />
         <Item title={t('cache')}>
           <Button
             variant="secondary"
@@ -83,56 +62,23 @@ export const Settings: React.FC = () => {
   )
 }
 
-const Synchronization: React.FC = () => {
-  const cookies = parseCookies()
-  const refreshToken = cookies[mapToToken['dropbox']]
-  const render = useForceRender()
+const Account: React.FC = () => {
+  const { data: session } = useSession()
+  useEventListener('message', () => {})
   const t = useTranslation('settings.synchronization')
-
-  useEventListener('message', (e) => {
-    if (e.data === OAUTH_SUCCESS_MESSAGE) {
-      // init app (generate access token, fetch remote data, etc.)
-      window.location.reload()
-    }
-  })
 
   return (
     <Item title={t('title')}>
-      <Select>
-        <option value="dropbox">Dropbox</option>
-      </Select>
+      <p className="text-on-surface-variant typescale-body-medium">
+        {session?.user?.email ?? session?.user?.name}
+      </p>
       <div className="mt-2">
-        {refreshToken ? (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              destroyCookie(null, mapToToken['dropbox'])
-              render()
-            }}
-          >
-            {t('unauthorize')}
-          </Button>
-        ) : (
-          <Button
-            onClick={() => {
-              const redirectUri =
-                window.location.origin + '/api/callback/dropbox'
-
-              dbx.auth
-                .getAuthenticationUrl(
-                  redirectUri,
-                  JSON.stringify({ redirectUri }),
-                  'code',
-                  'offline',
-                )
-                .then((url) => {
-                  window.open(url as string, '_blank')
-                })
-            }}
-          >
-            {t('authorize')}
-          </Button>
-        )}
+        <Button
+          variant="secondary"
+          onClick={() => signOut({ callbackUrl: '/login' })}
+        >
+          {t('unauthorize')}
+        </Button>
       </div>
     </Item>
   )

@@ -14,8 +14,8 @@ import { useSetRecoilState } from 'recoil'
 import useTilg from 'tilg'
 import { useSnapshot } from 'valtio'
 
-import { RenditionSpread } from '@flow/epubjs/types/rendition'
-import { navbarState } from '@flow/reader/state'
+import { RenditionSpread } from '@silkflow/epubjs/types/rendition'
+import { navbarState } from '@silkflow/reader/state'
 
 import { db } from '../db'
 import { handleFiles } from '../file'
@@ -72,7 +72,7 @@ export function ReaderGridView() {
   if (!groups.length) return null
   return (
     <SplitView className={clsx('ReaderGridView')}>
-      {groups.map(({ id }, i) => (
+      {(groups as unknown as { id: string }[]).map(({ id }, i) => (
         <ReaderGroup key={id} index={i} />
       ))}
     </SplitView>
@@ -85,7 +85,7 @@ interface ReaderGroupProps {
 function ReaderGroup({ index }: ReaderGroupProps) {
   const group = reader.groups[index]!
   const { focusedIndex } = useReaderSnapshot()
-  const { tabs, selectedIndex } = useSnapshot(group)
+  const { tabs, selectedIndex } = useSnapshot(group) as unknown as typeof group
   const t = useTranslation()
 
   const { size } = useSplitViewItem(`${ReaderGroup.name}.${index}`, {
@@ -211,7 +211,9 @@ function BookPane({ tab, onMouseDown }: BookPaneProps) {
   const { dark } = useColorScheme()
   const [background] = useBackground()
 
-  const { iframe, rendition, rendered, container } = useSnapshot(tab)
+  const { iframe, rendition, rendered, container } = useSnapshot(
+    tab,
+  ) as unknown as typeof tab
 
   useTilg()
 
@@ -347,12 +349,14 @@ function BookPane({ tab, onMouseDown }: BookPaneProps) {
 
     if (!iframe) return
 
+    const frame = iframe as unknown as Window
+
     // When selecting text with long tap, `touchend` is not fired,
     // so instead of use `addEventlistener`, we should use `on*`
     // to remove the previous listener.
-    iframe.ontouchend = function handleTouchEnd(e: TouchEvent) {
-      iframe.ontouchend = undefined
-      const selection = iframe.getSelection()
+    frame.ontouchend = function handleTouchEnd(e: TouchEvent) {
+      frame.ontouchend = undefined
+      const selection = frame.getSelection()
       if (hasSelection(selection)) return
 
       const x1 = e.changedTouches[0]?.clientX ?? 0
@@ -384,7 +388,7 @@ function BookPane({ tab, onMouseDown }: BookPaneProps) {
     }
   })
 
-  useDisablePinchZooming(iframe)
+  useDisablePinchZooming(iframe as unknown as Window)
 
   return (
     <div className={clsx('flex h-full flex-col', mobile && 'py-[3vw]')}>
@@ -423,7 +427,7 @@ interface ReaderPaneHeaderProps {
   tab: BookTab
 }
 const ReaderPaneHeader: React.FC<ReaderPaneHeaderProps> = ({ tab }) => {
-  const { location } = useSnapshot(tab)
+  const { location } = useSnapshot(tab) as unknown as typeof tab
   const navPath = tab.getNavPath()
 
   useEffect(() => {
@@ -456,7 +460,9 @@ interface FooterProps {
   tab: BookTab
 }
 const ReaderPaneFooter: React.FC<FooterProps> = ({ tab }) => {
-  const { locationToReturn, location, book } = useSnapshot(tab)
+  const { locationToReturn, location, book } = useSnapshot(
+    tab,
+  ) as unknown as typeof tab
 
   return (
     <Bar>

@@ -21,7 +21,7 @@ export const Seo: React.FC<SeoProps> = ({
 
   return (
     <NextSeo
-      title={scope === 'home' ? title : `${title} - Flow`}
+      title={scope === 'home' ? title : `${title} - SilkFlow`}
       description={description ?? t('desc')}
       {...seoProps}
     />

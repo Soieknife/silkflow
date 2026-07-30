@@ -9,5 +9,5 @@ module.exports = {
       padding: '1rem',
     },
   },
-  plugins: [require('@flow/tailwind'), require('@tailwindcss/line-clamp')],
+  plugins: [require('@silkflow/tailwind'), require('@tailwindcss/line-clamp')],
 }

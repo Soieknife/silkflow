@@ -4,7 +4,6 @@
 
 html,
 body,
-#__next,
 #layout {
   height: 100%;
 }
@@ -51,7 +50,13 @@ input[type='color']::-webkit-color-swatch {
   width: 10px;
 }
 .scroll:hover::-webkit-scrollbar-thumb {
-  @apply bg-on-background/10 hover:bg-on-background/20 active:bg-on-background/30;
+  background-color: rgb(var(--md-sys-color-on-background) / 0.1);
+}
+.scroll:hover::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(var(--md-sys-color-on-background) / 0.2);
+}
+.scroll:hover::-webkit-scrollbar-thumb:active {
+  background-color: rgb(var(--md-sys-color-on-background) / 0.3);
 }
 .scroll-parent {
   @apply flex flex-col overflow-hidden;
@@ -65,7 +70,7 @@ input[type='color']::-webkit-color-swatch {
 }
 
 .match-highlight {
-  @apply bg-yellow-500/30;
+  background-color: rgb(var(--md-sys-color-on-surface) / 0.15);
   color: unset;
 }
 
@@ -113,4 +118,30 @@ p {
 
 .list-row:hover .action {
   display: block;
+}
+
+/* Ink-wash (水墨) paper texture — subtle monochrome grain on the app shell */
+.ink-paper::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.04;
+  filter: grayscale(1);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.dark .ink-paper::before {
+  opacity: 0.06;
+}
+
+/* Prevent flash of unstyled content: default surface backgrounds (mirrors legacy _document) */
+.bg-default,
+.hover\:bg-default:hover {
+  background: #fff;
+}
+.dark.bg-default,
+.dark .bg-default,
+.dark .hover\:bg-default:hover {
+  background: #1a1a1a;
 }

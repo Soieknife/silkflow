@@ -24,6 +24,7 @@
 | ------------------- | --------------------------------------------- | ---------------------------------- |
 | `apps/reader`       | Next.js 15 (App Router), React 18, TypeScript | The reader (the product)           |
 | `apps/website`      | Next.js 12 (Pages Router)                     | Marketing site                     |
+| `pages/`            | Static HTML/CSS                               | GitHub Pages landing page          |
 | `packages/epubjs`   | vendored epub.js fork                         | Reader engine (consumed as source) |
 | `packages/tailwind` | Tailwind plugin                               | Material-3 design tokens           |
 | `packages/internal` | TS utils                                      | Shared helpers                     |
@@ -55,8 +56,8 @@ Vercel Blob (epub + cover objects)  ◀──  /api/upload (streaming)
 ### Clone & install
 
 ```bash
-git clone <your-silkflow-repo>
-cd flow
+git clone https://github.com/Soieknife/silkflow.git
+cd silkflow
 pnpm i
 ```
 

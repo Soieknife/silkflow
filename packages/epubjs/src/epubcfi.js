@@ -339,7 +339,7 @@ class EpubCFI {
     var terminalA, terminalB
 
     var rangeAStartSteps, rangeAEndSteps
-    var rangeBEndSteps, rangeBEndSteps
+    var rangeBStartSteps, rangeBEndSteps
     var rangeAStartTerminal, rangeAEndTerminal
     var rangeBStartTerminal, rangeBEndTerminal
 

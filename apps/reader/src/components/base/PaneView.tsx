@@ -36,7 +36,7 @@ export const Pane = forwardRef<HTMLDivElement, PaneProps>(function Pane(
       >
         <Twisty expanded={expanded} />
         <div
-          className="typescale-label-small text-on-surface-variant !font-bold"
+          className="!font-bold text-on-surface-variant typescale-label-small"
           style={{ fontSize: scale(11, 12) }}
         >
           {headline.toUpperCase()}
@@ -51,7 +51,7 @@ export const Pane = forwardRef<HTMLDivElement, PaneProps>(function Pane(
       <div
         ref={ref}
         className={clsx(
-          'scroll typescale-body-small text-on-surface-variant',
+          'scroll text-on-surface-variant typescale-body-small',
           !expanded && 'hidden',
           className,
         )}

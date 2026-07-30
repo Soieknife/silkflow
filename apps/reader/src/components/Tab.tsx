@@ -32,7 +32,7 @@ export function Tab({
     <div
       role="tab"
       className={clsx(
-        ' typescale-body-small relative flex cursor-pointer items-center gap-1 p-2 pr-1',
+        'relative flex cursor-pointer items-center gap-1 p-2 pr-1 typescale-body-small',
         selected ? `text-outline ${bg}` : `text-outline/60 hover:${bg}`,
         focused && '!text-on-surface',
         className,
@@ -66,7 +66,7 @@ const List: React.FC<ListProps> = ({ className, onDelete, ...props }) => {
   return (
     <div
       className={clsx(
-        'bg-primary/5 flex items-center justify-between',
+        'flex items-center justify-between bg-primary/5',
         className,
       )}
     >

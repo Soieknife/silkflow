@@ -32,7 +32,7 @@ export const TypographyView: React.FC<PaneViewProps> = (props) => {
 
   const { fontFamily, fontSize, fontWeight, lineHeight, zoom, spread } =
     scope === TypographyScope.Book
-      ? focusedBookTab?.book.configuration?.typography ?? defaultSettings
+      ? (focusedBookTab?.book.configuration?.typography ?? defaultSettings)
       : settings
 
   const setTypography = useCallback(
@@ -78,7 +78,7 @@ export const TypographyView: React.FC<PaneViewProps> = (props) => {
 
   return (
     <PaneView {...props}>
-      <div className="typescale-body-medium flex gap-2 px-5 pb-2 !text-[13px]">
+      <div className="flex gap-2 px-5 pb-2 !text-[13px] typescale-body-medium">
         {keys(TypographyScope)
           .filter((k) => isNaN(Number(k)))
           .map((scopeName) => (

@@ -231,7 +231,7 @@ function NavigationBar() {
           onClick={() => setVisible(false)}
         />
       )}
-      <div className="NavigationBar bg-surface border-surface-variant fixed inset-x-0 bottom-0 z-10 border-t">
+      <div className="NavigationBar fixed inset-x-0 bottom-0 z-10 border-t border-surface-variant bg-surface">
         {readMode ? (
           <ViewActionBar
             env={Env.Mobile}
@@ -268,7 +268,7 @@ const Action: React.FC<ActionProps> = ({
       className={clsx(
         'Action relative flex h-12 w-12 flex-1 items-center justify-center sm:flex-initial',
         active ? 'text-on-surface-variant' : 'text-outline/70',
-        props.disabled ? 'text-on-disabled' : 'hover:text-on-surface-variant ',
+        props.disabled ? 'text-on-disabled' : 'hover:text-on-surface-variant',
         className,
       )}
       {...props}
@@ -300,7 +300,7 @@ const SideBar: React.FC = () => {
       {action && mobile && <Overlay onClick={() => setAction(undefined)} />}
       <div
         className={clsx(
-          'SideBar bg-surface flex flex-col',
+          'SideBar flex flex-col bg-surface',
           !action && '!hidden',
           mobile ? 'absolute inset-y-0 right-0 z-10' : '',
         )}

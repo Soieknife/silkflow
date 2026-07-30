@@ -1,7 +1,23 @@
 module.exports = {
-  extends: ['../../.eslintrc.js'],
+  root: true,
+  env: {
+    browser: true,
+    node: true,
+    es2022: true,
+  },
+  globals: {
+    DocumentTouch: 'readonly',
+    MSApp: 'readonly',
+    global: 'readonly',
+  },
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'module',
+  },
+  extends: ['eslint:recommended', 'prettier'],
   rules: {
-    '@typescript-eslint/ban-types': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
+    'no-prototype-builtins': 'off',
+    'no-empty': 'off',
+    'no-unused-vars': 'off',
   },
 }

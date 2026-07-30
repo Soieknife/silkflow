@@ -1,10 +1,46 @@
-import { del, put } from '@vercel/blob'
+import { del, head, put } from '@vercel/blob'
 
 const COVER_EXT: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/webp': 'webp',
-  'image/gif': 'gif',
+}
+
+const MAX_COVER_BYTES = 5 * 1024 * 1024
+
+export async function assertUploadedEpub(input: {
+  userId: string
+  url: string
+  pathname: string
+  expectedSize: number
+}) {
+  const prefix = `users/${input.userId}/books/`
+  if (
+    !input.pathname.startsWith(prefix) ||
+    !/\.epub(?:-[^/]+)?$/i.test(input.pathname)
+  ) {
+    throw new Error('INVALID_BLOB_PATH')
+  }
+
+  const blob = await head(input.url)
+  if (blob.pathname !== input.pathname || !blob.pathname.startsWith(prefix)) {
+    throw new Error('INVALID_BLOB_OWNER')
+  }
+  if (blob.size !== input.expectedSize) {
+    throw new Error('INVALID_BLOB_SIZE')
+  }
+  if (
+    ![
+      'application/epub+zip',
+      'application/epub',
+      'application/zip',
+      'application/octet-stream',
+    ].includes(blob.contentType)
+  ) {
+    throw new Error('INVALID_BLOB_TYPE')
+  }
+
+  return blob
 }
 
 /** Upload a base64 cover data URL to Vercel Blob. Returns the public URL. */
@@ -17,8 +53,10 @@ export async function putCover(
   if (!match) return null
   const [, mime, base64] = match
   if (!mime || !base64) return null
+  if (!Object.hasOwn(COVER_EXT, mime)) return null
   const ext = COVER_EXT[mime] ?? 'png'
   const buffer = Buffer.from(base64, 'base64')
+  if (buffer.byteLength > MAX_COVER_BYTES) return null
   const blob = await put(`users/${userId}/covers/${bookId}.${ext}`, buffer, {
     access: 'public',
     addRandomSuffix: false,

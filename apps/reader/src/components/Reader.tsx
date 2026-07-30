@@ -440,7 +440,7 @@ const ReaderPaneHeader: React.FC<ReaderPaneHeaderProps> = ({ tab }) => {
         {navPath.map((item, i) => (
           <button
             key={i}
-            className="hover:text-on-surface flex shrink-0 items-center"
+            className="flex shrink-0 items-center hover:text-on-surface"
           >
             {item.label}
             {i !== navPath.length - 1 && <MdChevronRight size={20} />}
@@ -500,7 +500,7 @@ const Bar: React.FC<LineProps> = ({ className, ...props }) => {
   return (
     <div
       className={clsx(
-        'typescale-body-small text-outline flex h-6 items-center justify-between gap-2 px-[4vw] sm:px-2',
+        'flex h-6 items-center justify-between gap-2 px-[4vw] text-outline typescale-body-small sm:px-2',
         className,
       )}
       {...props}

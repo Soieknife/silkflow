@@ -9,6 +9,9 @@ const globalForDb = globalThis as unknown as {
 
 const connectionString =
   process.env.POSTGRES_URL ?? process.env.DATABASE_URL ?? ''
+if (!connectionString && process.env.VERCEL) {
+  throw new Error('POSTGRES_URL or DATABASE_URL is required on Vercel')
+}
 // Fallback dummy URL so static builds don't crash at import time; real queries
 // require a valid POSTGRES_URL and will fail at runtime otherwise.
 const client =

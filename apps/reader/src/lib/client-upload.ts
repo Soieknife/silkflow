@@ -2,7 +2,14 @@
  * Upload an epub to Vercel Blob by streaming it through the `/api/upload`
  * route (which enforces auth and writes under the user's namespace).
  */
-export async function uploadEpub(userId: string, file: File): Promise<string> {
+export interface UploadedEpub {
+  url: string
+  pathname: string
+  size: number
+  contentType: string
+}
+
+export async function uploadEpub(file: File): Promise<UploadedEpub> {
   const res = await fetch(
     `/api/upload?filename=${encodeURIComponent(file.name)}`,
     {
@@ -16,6 +23,5 @@ export async function uploadEpub(userId: string, file: File): Promise<string> {
   if (!res.ok) {
     throw new Error(`Upload failed: ${res.status}`)
   }
-  const blob = (await res.json()) as { url: string }
-  return blob.url
+  return (await res.json()) as UploadedEpub
 }

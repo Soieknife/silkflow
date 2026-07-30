@@ -4,7 +4,7 @@ import type { NextAuthConfig } from 'next-auth'
  * Edge-safe Auth.js config. Imported by `middleware.ts`.
  * Must NOT pull in Node-only deps (drizzle/postgres) — those live in `auth.ts`.
  */
-export const authConfig: NextAuthConfig = {
+export const authConfig = {
   providers: [],
   pages: { signIn: '/login' },
   session: { strategy: 'jwt' },
@@ -23,4 +23,4 @@ export const authConfig: NextAuthConfig = {
       return isLoggedIn
     },
   },
-}
+} satisfies NextAuthConfig

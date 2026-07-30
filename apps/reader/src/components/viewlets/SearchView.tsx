@@ -98,7 +98,7 @@ const ResultList: React.FC<ResultListProps> = ({ results, keyword }) => {
 
   return (
     <>
-      <div className="typescale-body-small text-outline px-5  py-2">
+      <div className="px-5 py-2 text-outline typescale-body-small">
         {t('files.result')
           .replace('{n}', '' + resultCount)
           .replace('{m}', '' + sectionCount)}

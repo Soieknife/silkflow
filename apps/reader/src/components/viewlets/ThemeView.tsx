@@ -63,7 +63,7 @@ interface BackgroundProps extends ComponentProps<'div'> {}
 const Background: React.FC<BackgroundProps> = ({ className, ...props }) => {
   return (
     <div
-      className={clsx('border-outline-variant light h-6 w-6 border', className)}
+      className={clsx('light h-6 w-6 border border-outline-variant', className)}
       {...props}
     ></div>
   )

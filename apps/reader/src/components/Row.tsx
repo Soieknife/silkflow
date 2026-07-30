@@ -78,7 +78,7 @@ export const Row: React.FC<RowProps> = ({
       />
       <div
         className={clsx(
-          'typescale-body-small truncate',
+          'truncate typescale-body-small',
           t ? 'text-on-surface-variant' : 'text-outline/60',
         )}
         style={{
@@ -102,7 +102,7 @@ export const Row: React.FC<RowProps> = ({
       <div className="ml-auto">
         {badge && childCount && (
           <div
-            className="bg-tertiary-container text-on-tertiary-container rounded-full px-1.5 py-px"
+            className="rounded-full bg-tertiary-container px-1.5 py-px text-on-tertiary-container"
             style={{
               fontSize: scale(11, 12),
             }}
@@ -138,7 +138,7 @@ export const Twisty: React.FC<TwistyProps> = ({
   return (
     <Icon
       size={20}
-      className={clsx('text-outline shrink-0', className)}
+      className={clsx('shrink-0 text-outline', className)}
       style={{ padding: scale(2, 1) }}
       {...props}
     />

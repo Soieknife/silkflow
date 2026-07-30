@@ -1,0 +1,23 @@
+node_modules
+.next
+dist
+build
+out
+coverage
+.turbo
+
+pnpm-lock.yaml
+*-lock.json
+*-lock.yaml
+
+# generated
+apps/reader/drizzle
+**/next-env.d.ts
+**/*.tsbuildinfo
+
+# static test fixtures & vendored xhtml
+packages/epubjs/test/fixtures
+**/*.xhtml
+
+# github pages demo output
+pages

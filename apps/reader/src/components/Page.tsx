@@ -14,7 +14,7 @@ export const Page: React.FC<PageProps> = ({
     <div className={clsx('p-4', className)} {...props}>
       <h1
         className={clsx(
-          'typescale-title-large text-on-surface-variant mb-4',
+          'mb-4 text-on-surface-variant typescale-title-large',
           className,
         )}
         {...props}

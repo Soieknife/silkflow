@@ -150,8 +150,8 @@ const Library: React.FC<LibraryProps> = ({ userId }) => {
   if (groups.length) return null
   if (!books) return null
 
-  const selectedBooks = [...selectedBookIds].map(
-    (id) => books.find((b) => b.id === id)!,
+  const selectedBooks = [...selectedBookIds].map((id) =>
+    books.find((b) => b.id === id)!,
   )
   const allSelected = selectedBookIds.size === books.length
 
@@ -170,17 +170,18 @@ const Library: React.FC<LibraryProps> = ({ userId }) => {
 
     setLoading(book.id)
     try {
-      const epubUrl = await uploadEpub(userId, fr.file)
+      const epub = await uploadEpub(fr.file)
       const cover = await db?.covers.get(book.id)
       await createBookAction({
         id: book.id,
         name: book.name,
         size: book.size,
         metadata: book.metadata,
-        epubBlobUrl: epubUrl,
+        epubBlobUrl: epub.url,
+        epubBlobPathname: epub.pathname,
         coverDataUrl: cover?.cover ?? null,
       })
-      await db?.books.update(book.id, { epubBlobUrl: epubUrl })
+      await db?.books.update(book.id, { epubBlobUrl: epub.url })
       mutateRemoteBooks()
     } finally {
       setLoading(undefined)
@@ -385,7 +386,7 @@ const Book: React.FC<BookProps> = ({
     <div className="relative flex flex-col">
       <div
         role="button"
-        className="border-inverse-on-surface relative border"
+        className="relative border border-inverse-on-surface"
         onClick={() => {
           if (select) {
             toggle(book.id)
@@ -396,12 +397,12 @@ const Book: React.FC<BookProps> = ({
       >
         <div
           className={clsx(
-            'bg-on-surface/70 absolute bottom-0 h-1',
+            'absolute bottom-0 h-1 bg-on-surface/70',
             loading && 'progress-bit w-[5%]',
           )}
         />
         {book.percentage !== undefined && (
-          <div className="typescale-body-large absolute right-0 bg-gray-500/60 px-2 text-gray-100">
+          <div className="absolute right-0 bg-gray-500/60 px-2 text-gray-100 typescale-body-large">
             {(book.percentage * 100).toFixed()}%
           </div>
         )}
@@ -425,7 +426,7 @@ const Book: React.FC<BookProps> = ({
       </div>
 
       <div
-        className="line-clamp-2 text-on-surface-variant typescale-body-small lg:typescale-body-medium mt-2 w-full"
+        className="mt-2 w-full text-on-surface-variant typescale-body-small line-clamp-2 lg:typescale-body-medium"
         title={book.name}
       >
         <MdCheckCircle

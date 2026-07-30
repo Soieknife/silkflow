@@ -66,8 +66,8 @@ export const TextSelectionMenu: React.FC<TextSelectionMenuProps> = ({
   const forward = isTouchScreen
     ? false
     : selection
-    ? isForwardSelection(selection)
-    : true
+      ? isForwardSelection(selection)
+      : true
 
   const rects = [...range.getClientRects()].filter((r) => Math.round(r.width))
   const anchorRect = rects && (forward ? last(rects) : rects[0])
@@ -168,7 +168,7 @@ const TextSelectionMenuRenderer: React.FC<TextSelectionMenuRendererProps> = ({
           }
         }}
         className={clsx(
-          'bg-surface text-on-surface-variant shadow-1 absolute z-50 p-2 focus:outline-none',
+          'absolute z-50 bg-surface p-2 text-on-surface-variant shadow-1 focus:outline-none',
         )}
         style={{
           left: layout(containerRect.width, width, {
@@ -204,7 +204,7 @@ const TextSelectionMenuRenderer: React.FC<TextSelectionMenuRendererProps> = ({
             />
           </div>
         ) : (
-          <div className="text-on-surface-variant -mx- mb-3 flex gap-1">
+          <div className="-mx- mb-3 flex gap-1 text-on-surface-variant">
             <IconButton
               title={t('copy')}
               Icon={MdCopyAll}
@@ -268,7 +268,7 @@ const TextSelectionMenuRenderer: React.FC<TextSelectionMenuRendererProps> = ({
                     fontSize: scale(16, 20),
                   }}
                   className={clsx(
-                    'typescale-body-large text-on-surface-variant flex cursor-pointer items-center justify-center',
+                    'flex cursor-pointer items-center justify-center text-on-surface-variant typescale-body-large',
                     typeMap[type].class,
                   )}
                   onClick={() => {

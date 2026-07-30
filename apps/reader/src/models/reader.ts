@@ -63,7 +63,10 @@ interface TimelineItem {
 }
 
 class BaseTab {
-  constructor(public readonly id: string, public readonly title = id) {}
+  constructor(
+    public readonly id: string,
+    public readonly title = id,
+  ) {}
 
   get isBook(): boolean {
     return this instanceof BookTab

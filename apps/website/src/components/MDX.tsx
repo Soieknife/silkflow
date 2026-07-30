@@ -15,7 +15,7 @@ export function H1({ className, ...props }: HeadingProps) {
   return (
     <Heading
       as="h1"
-      className={clsx('typescale-headline-medium mt-6', className)}
+      className={clsx('mt-6 typescale-headline-medium', className)}
       {...props}
     />
   )
@@ -25,7 +25,7 @@ export function H2({ className, ...props }: HeadingProps) {
   return (
     <Heading
       as="h2"
-      className={clsx('typescale-title-large mt-12', className)}
+      className={clsx('mt-12 typescale-title-large', className)}
       {...props}
     />
   )

@@ -52,8 +52,8 @@ export function useBackground() {
     const color = dark
       ? '#1a1a1a'
       : level < 0
-      ? '#fff'
-      : compositeColors(surface, primary, surfaceMap[level]!)
+        ? '#fff'
+        : compositeColors(surface, primary, surfaceMap[level]!)
 
     document.querySelector('#theme-color')?.setAttribute('content', color)
   }, [dark, level, rawTheme])

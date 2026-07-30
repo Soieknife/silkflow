@@ -12,7 +12,11 @@ import {
   saveSettings,
   updateBook,
 } from '@silkflow/reader/lib/db/queries'
-import { deleteBlobs, putCover } from '@silkflow/reader/lib/blob'
+import {
+  assertUploadedEpub,
+  deleteBlobs,
+  putCover,
+} from '@silkflow/reader/lib/blob'
 
 export type CloudBook = Awaited<ReturnType<typeof listBooks>>[number]
 
@@ -27,9 +31,16 @@ export async function createBookAction(input: {
   size: number
   metadata: unknown
   epubBlobUrl: string
+  epubBlobPathname: string
   coverDataUrl?: string | null
 }) {
   const userId = await requireUser()
+  const epubBlob = await assertUploadedEpub({
+    userId,
+    url: input.epubBlobUrl,
+    pathname: input.epubBlobPathname,
+    expectedSize: input.size,
+  })
   let coverBlobUrl: string | null = null
   if (input.coverDataUrl) {
     coverBlobUrl = await putCover(userId, input.id, input.coverDataUrl)
@@ -39,7 +50,7 @@ export async function createBookAction(input: {
     name: input.name,
     size: input.size,
     metadata: input.metadata,
-    epubBlobUrl: input.epubBlobUrl,
+    epubBlobUrl: epubBlob.url,
     coverBlobUrl,
   })
   revalidatePath('/library')

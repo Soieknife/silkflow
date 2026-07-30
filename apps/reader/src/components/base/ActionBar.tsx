@@ -16,7 +16,7 @@ interface ActionBarProps extends ComponentProps<'ul'> {
 }
 export const ActionBar: React.FC<ActionBarProps> = ({ actions, className }) => {
   return (
-    <ul className={clsx('text-on-surface-variant flex gap-1', className)}>
+    <ul className={clsx('flex gap-1 text-on-surface-variant', className)}>
       {actions.map(({ id, title, Icon, handle }) => (
         <li key={id} title={title}>
           <IconButton

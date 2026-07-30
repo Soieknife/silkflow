@@ -83,7 +83,7 @@ export function TextField<T extends ElementType = 'input'>({
           name={name}
           id={name}
           className={clsx(
-            'typescale-body-medium text-on-surface-variant placeholder:text-outline/60 w-0 flex-1 bg-transparent py-1 px-1.5 !text-[13px]',
+            'w-0 flex-1 bg-transparent py-1 px-1.5 !text-[13px] text-on-surface-variant typescale-body-medium placeholder:text-outline/60',
             isInput || 'scroll h-full resize-none',
           )}
           {...(datalist && { list: datalistId })}
@@ -94,7 +94,7 @@ export function TextField<T extends ElementType = 'input'>({
           <div className="mx-1 flex gap-0.5">
             {actions.map(({ onClick, ...a }) => (
               <IconButton
-                className="text-outline !p-px"
+                className="!p-px text-outline"
                 key={a.title}
                 onClick={() => {
                   onClick(ref.current)
@@ -124,7 +124,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({ name, ...props }) => {
           className="peer block h-4 w-4 appearance-none"
           {...props}
         />
-        <MdCheck className="text-on-surface-variant pointer-events-none invisible absolute top-0 peer-checked:visible" />
+        <MdCheck className="pointer-events-none invisible absolute top-0 text-on-surface-variant peer-checked:visible" />
       </div>
     </div>
   )
@@ -145,7 +145,7 @@ export const Select: React.FC<SelectProps> = ({
         name={name}
         id={name}
         className={clsx(
-          'typescale-body-medium text-on-surface-variant bg-default max-w-xs px-0.5 py-1 !text-[13px]',
+          'bg-default max-w-xs px-0.5 py-1 !text-[13px] text-on-surface-variant typescale-body-medium',
         )}
         {...props}
       ></select>
@@ -188,7 +188,7 @@ export const Label: React.FC<LabelProps> = ({
     <label
       htmlFor={name}
       className={clsx(
-        'typescale-label-medium text-on-surface-variant mb-1 block !text-[13px]',
+        'mb-1 block !text-[13px] text-on-surface-variant typescale-label-medium',
         hide && 'hidden',
         className,
       )}
